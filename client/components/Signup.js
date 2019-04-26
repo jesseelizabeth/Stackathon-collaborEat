@@ -13,6 +13,7 @@ import firebase from 'firebase';
 export default class Signup extends Component {
   constructor(props) {
     super(props);
+    this.ref = firebase.firestore().collection('users');
     this.state = {
       loading: false,
       email: '',
@@ -20,6 +21,8 @@ export default class Signup extends Component {
       error: '',
     };
     this.signup = this.signup.bind(this);
+    this.saveUser = this.saveUser.bind(this);
+    this.singUpAndSaveUser = this.singUpAndSaveUser.bind(this);
   }
   signup() {
     this.setState({ loading: true });
@@ -36,7 +39,13 @@ export default class Signup extends Component {
       this.setState({ error: 'Authentication failed', loading: false });
     }
   }
-  saveUser() {}
+  saveUser() {
+    this.ref.add({ email: this.state.email });
+  }
+  singUpAndSaveUser() {
+    this.saveUser();
+    this.signup();
+  }
 
   render() {
     if (this.state.loading) {
@@ -68,7 +77,7 @@ export default class Signup extends Component {
           ref={input => (this.passwordInput = input)}
         />
         <TouchableOpacity style={styles.buttonContainer}>
-          <Text onPress={this.signup} style={styles.buttonText}>
+          <Text onPress={this.singUpAndSaveUser} style={styles.buttonText}>
             SIGN UP
           </Text>
         </TouchableOpacity>

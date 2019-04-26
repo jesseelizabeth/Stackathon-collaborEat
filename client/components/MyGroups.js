@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, View } from 'react-native';
+import Group from './Group';
 
 export default class MyGroups extends Component {
   render() {
     return (
-      <View>
-        <Text> textInComponent </Text>
+      <View style={styles.container}>
+        <Group />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
