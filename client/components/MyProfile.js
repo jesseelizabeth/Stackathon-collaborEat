@@ -1,13 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default class App extends React.Component {
+export default class MyProfile extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.bold}>
-          my<Text style={styles.thin}>melier</Text>
-        </Text>
+        <Text>Hello, {username}</Text>
       </View>
     );
   }
