@@ -7,6 +7,8 @@ import Welcome from './components/Welcome';
 import CreateGroup from './components/CreateGroup';
 import MyGroups from './components/MyGroups';
 import AddPlace from './components/AddPlace';
+import Group from './components/Group';
+import Search from './components/Search';
 import '../config/firebaseConfig';
 
 const AppNavigator = createStackNavigator(
@@ -18,6 +20,8 @@ const AppNavigator = createStackNavigator(
     CreateGroup: CreateGroup,
     MyGroups: MyGroups,
     AddPlace: AddPlace,
+    Group: Group,
+    Search: Search,
   },
   {
     initialRouteName: 'Home',

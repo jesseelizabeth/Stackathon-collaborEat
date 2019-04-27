@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TextInput, Button } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import firebase from 'firebase';
 
 export default class AddPlace extends Component {
   constructor(props) {
     super(props);
     const { navigation } = this.props;
+    const groupName = navigation.getParam('groupName');
     const name = navigation.getParam('name');
     const address = navigation.getParam('address');
     const priceLevel = navigation.getParam('priceLevel');
@@ -13,6 +20,7 @@ export default class AddPlace extends Component {
     const website = navigation.getParam('website');
     const phone = navigation.getParam('phone');
     this.state = {
+      groupName,
       name,
       address,
       priceLevel,
@@ -31,7 +39,7 @@ export default class AddPlace extends Component {
       .collection('users')
       .doc(user.email)
       .collection('groups')
-      .doc() // target specific group
+      .doc(this.state.groupName) // target specific group
       .collection('places')
       .doc();
     placeRef.set({ name, address, priceLevel, starRating, website, phone });
@@ -46,27 +54,62 @@ export default class AddPlace extends Component {
       phone,
     } = this.state;
     return (
-      <View>
-        <Text>{name}</Text>
-        <Text>{address}</Text>
-        <Text>{priceLevel}</Text>
-        <Text>{starRating}</Text>
-        <Text>{website}</Text>
-        <Text>{phone}</Text>
+      <View style={styles.container}>
+        <Text style={styles.text}>{name}</Text>
+        <Text style={styles.text}>{address}</Text>
+        <Text style={styles.text}>Price Level: {priceLevel}</Text>
+        <Text style={styles.text}>Star Rating: {starRating}</Text>
+        <Text style={styles.text}>{website}</Text>
+        <Text style={styles.text}>{phone}</Text>
         <TextInput
+          style={styles.input}
           placeholder="Description"
           onChangeText={description => this.setState({ description })}
           value={this.state.description}
         />
-        <Button
-          title="ADD"
-          onPress={() =>
-            this.addPlace(name, address, priceLevel, starRating, website, phone)
-          }
-        />
+        <TouchableOpacity style={styles.buttonContainer}>
+          <Text
+            style={styles.buttonText}
+            onPress={() =>
+              this.addPlace(
+                name,
+                address,
+                priceLevel,
+                starRating,
+                website,
+                phone
+              )
+            }
+          >
+            ADD
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  text: {
+    padding: 5,
+    fontSize: 16,
+  },
+  input: {
+    padding: 5,
+    height: 100,
+  },
+  buttonContainer: {
+    backgroundColor: '#ff9f1a',
+    padding: 20,
+    borderRadius: 20,
+    marginTop: 20,
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontSize: 20,
+  },
+});

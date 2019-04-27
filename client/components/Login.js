@@ -43,7 +43,7 @@ class Login extends Component {
     }
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <StatusBar barStyle="light-content" />
+        <StatusBar />
         <TextInput
           placeholder="email"
           placeholderTextColor="rgba(255,255,255,0.7)"

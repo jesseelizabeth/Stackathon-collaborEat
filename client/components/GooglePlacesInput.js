@@ -1,20 +1,20 @@
 import React from 'react';
-import { Image, Text } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { API_KEY } from '../../googlePlaces';
 import AddPlace from './AddPlace';
 import { withNavigation } from 'react-navigation';
 
 const GooglePlacesInput = props => {
+  const { groupName } = props;
   return (
     <GooglePlacesAutocomplete
-      placeholder="Search"
+      placeholder="Add a new place"
       minLength={2} // minimum length of text to search
       autoFocus={false}
-      returnKeyType="search" // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+      returnKeyType="search"
       listViewDisplayed="auto" // true/false/undefined
       fetchDetails={true}
-      renderDescription={row => row.description} // custom description render
+      renderDescription={row => row.description}
       onPress={(data, details = null) => {
         const name = details.name;
         const address = details.formatted_address;
@@ -23,6 +23,7 @@ const GooglePlacesInput = props => {
         const website = details.website;
         const phone = details.formatted_phone_number;
         return props.navigation.navigate('AddPlace', {
+          groupName,
           name,
           address,
           priceLevel,
@@ -60,7 +61,7 @@ const GooglePlacesInput = props => {
       // renderLeftButton={() => (
       //   <Image source={require('path/custom/left-icon')} />
       // )}
-      renderRightButton={() => <Text>Custom text after the input</Text>}
+      // renderRightButton={() => <Text>Custom text after the input</Text>}
     />
   );
 };

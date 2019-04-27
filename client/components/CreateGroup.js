@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
 import firebase from 'firebase';
 
 export default class CreateGroup extends Component {
   constructor(props) {
     super(props);
-    this.ref = firebase.firestore().collection('users');
     this.state = {
       groupName: '',
       userEmail: '',
@@ -18,12 +22,16 @@ export default class CreateGroup extends Component {
   // addUser() {
   //   this.ref.get({ email: this.state.userEmail });
   // }
-  createGroup(groupName, userEmail) {
+  createGroup(groupName) {
+    const user = firebase.auth().currentUser;
     firebase
       .firestore()
+      .collection('users')
+      .doc(user.email)
       .collection('groups')
       .doc()
-      .set({ groupName, userEmail });
+      .set({ groupName });
+    this.props.navigation.navigate('MyGroups');
   }
   render() {
     return (
@@ -44,9 +52,7 @@ export default class CreateGroup extends Component {
         </View>
         <TouchableOpacity style={styles.buttonContainer}>
           <Text
-            onPress={() =>
-              this.createGroup(this.state.groupName, this.state.userEmail)
-            }
+            onPress={() => this.createGroup(this.state.groupName)}
             style={styles.buttonText}
           >
             ADD
@@ -67,12 +73,13 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     backgroundColor: '#ff9f1a',
-    paddingVertical: 15,
-    marginBottom: 10,
+    padding: 20,
+    borderRadius: 20,
+    marginTop: 20,
   },
   buttonText: {
     textAlign: 'center',
     color: '#FFFFFF',
-    fontWeight: '700',
+    fontSize: 20,
   },
 });

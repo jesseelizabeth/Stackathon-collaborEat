@@ -1,60 +1,52 @@
 import React, { Component } from 'react';
-import { TextInput, StyleSheet, View, Button } from 'react-native';
-import { API_KEY } from '../../googlePlaces';
-import firebase from 'firebase';
+import { TouchableOpacity, StyleSheet, View, Button, Text } from 'react-native';
 import GooglePlacesInput from './GooglePlacesInput';
+import Search from './Search';
 
 export default class Group extends Component {
-  constructor() {
-    super();
-    this.ref = firebase
-      .firestore()
-      .collection('places')
-      .doc();
-    this.state = {
-      search: '',
-      name: '',
-      address: '',
-    };
-    // this.findPlace = this.findPlace.bind(this);
-    // this.savePlace = this.savePlace.bind(this);
-  }
-  // async findPlace() {
-  //   let { search } = this.state;
-  //   search = search.split(' ');
-  //   search = search.join('%20');
-  //   const response = await fetch(
-  //     `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${search}&inputtype=textquery&fields=formatted_address,name&key=${API_KEY}`
-  //   );
-  //   let data = await response.json();
-  //   if (!data.candidates.length) {
-  //     console.log('No restaurant found');
-  //   } else {
-  //     this.setState({
-  //       name: data.candidates[0].name,
-  //       address: data.candidates[0].formatted_address,
-  //     });
-  //     this.savePlace();
-  //     console.log('NAME', this.state.name, 'ADDRESS', this.state.address);
-  //   }
-  // }
-  // savePlace() {
-  //   console.log('SAVEPLACE', this.state);
-  //   this.ref.set({ name: this.state.name, address: this.state.address });
-  // }
   render() {
+    const { navigation } = this.props;
+    const group = navigation.getParam('group');
     return (
-      <View>
-        <GooglePlacesInput />
-        {/* <TextInput
-          placeholder="Add a place"
-          onChangeText={search => this.setState({ search })}
-          value={this.state.search}
-        />
-        <Button title="ADD" onPress={this.findPlace} /> */}
+      <View style={styles.container}>
+        <Text style={styles.groupName}>{group.groupName}</Text>
+        <TouchableOpacity style={styles.buttonContainer}>
+          <Text
+            onPress={() => this.props.navigation.navigate('Search')}
+            style={styles.buttonText}
+          >
+            ADD A PLACE
+          </Text>
+        </TouchableOpacity>
+        <View style={styles.search}>
+          <GooglePlacesInput groupName={group.groupName} />
+        </View>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  groupName: {
+    marginBottom: 40,
+    textAlign: 'center',
+    fontSize: 20,
+  },
+  buttonContainer: {
+    backgroundColor: '#ff9f1a',
+    padding: 20,
+    borderRadius: 20,
+    marginTop: 20,
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: '#FFFFFF',
+    fontSize: 20,
+  },
+  search: {
+    height: 200,
+  },
+});
