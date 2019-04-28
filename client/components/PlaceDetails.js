@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, Linking } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  Linking,
+  TouchableOpacity,
+} from 'react-native';
 import Communications from 'react-native-communications';
 import { withNavigation } from 'react-navigation';
 
@@ -9,7 +15,7 @@ class PlaceDetails extends Component {
     const place = navigation.getParam('place');
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>{place.name}</Text>
+        <Text style={styles.title}>{place.name}</Text>
         <Text style={styles.text}>{place.address}</Text>
         <Text style={styles.text}>Price Level: {place.priceLevel}</Text>
         <Text style={styles.text}>Star Rating: {place.starRating}</Text>
@@ -26,12 +32,14 @@ class PlaceDetails extends Component {
           {' '}
           {place.phone}
         </Text>
+        <Text style={styles.title}>Description:</Text>
         <Text style={styles.text}>{place.description}</Text>
+        <Text style={styles.title}>Good for:</Text>
         {place.tags
           ? place.tags.map((tag, index) => (
-              <Text style={styles.text} key={index}>
-                {tag}
-              </Text>
+              <TouchableOpacity style={styles.tags} key={index}>
+                <Text style={styles.tag}>{tag}</Text>
+              </TouchableOpacity>
             ))
           : null}
       </View>
@@ -41,12 +49,34 @@ class PlaceDetails extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
+    flex: 1,
   },
   text: {
     padding: 5,
-    fontSize: 24,
-    color: '#ffaf40',
+    fontSize: 16,
+    color: 'black',
+  },
+  tags: {
+    backgroundColor: '#4834d4',
+    marginTop: 20,
+    borderRadius: 20,
+    width: 200,
+  },
+  tag: {
+    margin: 10,
+    padding: 10,
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 16,
+  },
+  title: {
+    fontSize: 40,
+    color: '#eb4d4b',
+    paddingBottom: 20,
+    paddingTop: 20,
+    fontWeight: 'bold',
   },
 });
 

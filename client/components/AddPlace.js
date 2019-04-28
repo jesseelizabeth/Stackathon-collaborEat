@@ -8,26 +8,21 @@ import {
   Picker,
 } from 'react-native';
 import firebase from 'firebase';
+import { connect } from 'react-redux';
+import { addNewPlace } from '../store/reducers/place';
 
-export default class AddPlace extends Component {
+class AddPlace extends Component {
   constructor(props) {
     super(props);
     const { navigation } = this.props;
-    const groupName = navigation.getParam('groupName');
-    const name = navigation.getParam('name');
-    const address = navigation.getParam('address');
-    const priceLevel = navigation.getParam('priceLevel');
-    const starRating = navigation.getParam('starRating');
-    const website = navigation.getParam('website');
-    const phone = navigation.getParam('phone');
     this.state = {
-      groupName,
-      name,
-      address,
-      priceLevel,
-      starRating,
-      website,
-      phone,
+      groupName: navigation.getParam('groupName'),
+      name: navigation.getParam('name'),
+      address: navigation.getParam('address'),
+      priceLevel: navigation.getParam('priceLevel'),
+      starRating: navigation.getParam('starRating'),
+      website: navigation.getParam('website'),
+      phone: navigation.getParam('phone'),
       description: '',
       tags: [],
       tag: '',
@@ -35,25 +30,31 @@ export default class AddPlace extends Component {
     this.addPlace = this.addPlace.bind(this);
     this.addTag = this.addTag.bind(this);
   }
-  addPlace(name, address, priceLevel, starRating, website, phone) {
-    const user = firebase.auth().currentUser;
-    const placeRef = firebase
-      .firestore()
-      .collection('users')
-      .doc(user.email)
-      .collection('groups')
-      .doc(this.state.groupName) // target specific group
-      .collection('places')
-      .doc();
-    placeRef.set({
+  addPlace() {
+    let {
+      groupName,
       name,
       address,
       priceLevel,
       starRating,
       website,
       phone,
-      description: this.state.description,
-      tags: this.state.tags,
+      description,
+      tags,
+    } = this.state;
+    const user = firebase.auth().currentUser;
+    if (priceLevel === undefined) {
+      priceLevel = ' ';
+    }
+    this.props.addNewPlace(groupName, user.email, {
+      name,
+      address,
+      priceLevel,
+      starRating,
+      website,
+      phone,
+      description,
+      tags,
     });
     return this.props.navigation.navigate('MyGroups');
   }
@@ -100,19 +101,7 @@ export default class AddPlace extends Component {
         </Picker>
         <Text onPress={this.addTag}>Add Tag</Text>
         <TouchableOpacity style={styles.buttonContainer}>
-          <Text
-            style={styles.buttonText}
-            onPress={() =>
-              this.addPlace(
-                name,
-                address,
-                priceLevel,
-                starRating,
-                website,
-                phone
-              )
-            }
-          >
+          <Text style={styles.buttonText} onPress={() => this.addPlace()}>
             ADD
           </Text>
         </TouchableOpacity>
@@ -145,3 +134,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
+
+const mapDispatch = dispatch => ({
+  addNewPlace: (groupName, userEmail, placeInfo) =>
+    dispatch(addNewPlace(groupName, userEmail, placeInfo)),
+});
+
+export default connect(
+  null,
+  mapDispatch
+)(AddPlace);

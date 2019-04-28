@@ -26,8 +26,9 @@ export default class Home extends Component {
           <Login n />
         </View>
         <Button
+          color="white"
           onPress={() => this.props.navigation.navigate('Signup')}
-          title="SIGN UP"
+          title="Sign Up"
         />
       </KeyboardAvoidingView>
     );
@@ -37,7 +38,7 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffaf40',
+    backgroundColor: '#4834d4',
   },
   titleContainer: {
     alignItems: 'center',

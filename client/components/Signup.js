@@ -53,7 +53,6 @@ export default class Signup extends Component {
     }
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <StatusBar barStyle="light-content" />
         <TextInput
           placeholder="email"
           placeholderTextColor="rgba(255,255,255,0.7)"
@@ -89,7 +88,8 @@ export default class Signup extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffaf40',
+    backgroundColor: '#4834d4',
+    padding: 20,
   },
   input: {
     height: 40,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonContainer: {
-    backgroundColor: '#ff9f1a',
+    backgroundColor: '#eb4d4b',
     paddingVertical: 15,
     marginBottom: 10,
   },

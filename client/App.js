@@ -12,6 +12,9 @@ import Search from './components/Search';
 import PlaceDetails from './components/PlaceDetails';
 import '../config/firebaseConfig';
 
+import store from './store';
+import { Provider } from 'react-redux';
+
 const AppNavigator = createStackNavigator(
   {
     Home: Home,
@@ -34,6 +37,10 @@ const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.Component {
   render() {
-    return <AppContainer />;
+    return (
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    );
   }
 }

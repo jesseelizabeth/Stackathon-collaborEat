@@ -7,8 +7,10 @@ import {
   TextInput,
 } from 'react-native';
 import firebase from 'firebase';
+import { connect } from 'react-redux';
+import { createGroup, addAllMembers } from '../store/reducers/group';
 
-export default class CreateGroup extends Component {
+class CreateGroup extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,37 +19,17 @@ export default class CreateGroup extends Component {
       friends: [],
     };
     this.addUser = this.addUser.bind(this);
-    this.createGroup = this.createGroup.bind(this);
+    this.create = this.create.bind(this);
   }
-  addUser(groupName) {
-    firebase
-      .firestore()
-      .collection('users')
-      .doc(this.state.userEmail)
-      .collection('groups')
-      .doc()
-      .set({ groupName });
+  addUser() {
     this.state.friends.push(this.state.userEmail);
     this.setState({ userEmail: '' });
   }
-  createGroup(groupName, friends) {
+  create(groupName, friends) {
     const user = firebase.auth().currentUser;
-    firebase
-      .firestore()
-      .collection('users')
-      .doc(user.email)
-      .collection('groups')
-      .doc()
-      .set({ groupName });
-    friends.map(friend =>
-      firebase
-        .firestore()
-        .collection('users')
-        .doc(friend)
-        .collection('groups')
-        .doc()
-        .set({ groupName })
-    );
+    this.props.createGroup(groupName, user.email);
+    friends.map(friend => this.props.createGroup(groupName, friend));
+    this.props.addAllMembers(this.state.friends, groupName);
     this.props.navigation.navigate('MyGroups');
   }
   render() {
@@ -73,17 +55,14 @@ export default class CreateGroup extends Component {
             ))
           : null}
         <TouchableOpacity style={styles.buttonContainer}>
-          <Text
-            onPress={() => this.addUser(this.state.groupName)}
-            style={styles.buttonText}
-          >
+          <Text onPress={() => this.addUser()} style={styles.buttonText}>
             add friend
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonContainer}>
           <Text
             onPress={() =>
-              this.createGroup(this.state.groupName, this.state.friends)
+              this.create(this.state.groupName, this.state.friends)
             }
             style={styles.buttonText}
           >
@@ -115,3 +94,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
+
+const mapDispatch = dispatch => ({
+  createGroup: (groupName, userEmail) =>
+    dispatch(createGroup(groupName, userEmail)),
+  addAllMembers: (members, groupName) =>
+    dispatch(addAllMembers(members, groupName)),
+});
+
+export default connect(
+  null,
+  mapDispatch
+)(CreateGroup);

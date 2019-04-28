@@ -37,7 +37,7 @@ export default class Welcome extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffaf40',
+    backgroundColor: '#4834d4',
     alignItems: 'center',
   },
   welcomeText: {
@@ -47,12 +47,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   buttonContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#eb4d4b',
     padding: 20,
     borderRadius: 20,
+    width: 300,
   },
   text: {
-    color: 'orange',
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 20,
   },
   view: {
     padding: 20,
