@@ -16,6 +16,7 @@ class AddPlace extends Component {
     super(props);
     const { navigation } = this.props;
     this.state = {
+      members: navigation.getParam('members'),
       groupName: navigation.getParam('groupName'),
       name: navigation.getParam('name'),
       address: navigation.getParam('address'),
@@ -32,6 +33,7 @@ class AddPlace extends Component {
   }
   addPlace() {
     let {
+      members,
       groupName,
       name,
       address,
@@ -86,7 +88,11 @@ class AddPlace extends Component {
           value={this.state.description}
         />
         {this.state.tags.length
-          ? this.state.tags.map(tag => <Text key={tag}>{tag}</Text>)
+          ? this.state.tags.map(tag => (
+              <Text style={styles.text} key={tag}>
+                {tag}
+              </Text>
+            ))
           : null}
         <Picker
           selectedValue={this.state.tag}
@@ -98,8 +104,18 @@ class AddPlace extends Component {
           <Picker.Item label="Dates" value="Dates" />
           <Picker.Item label="Ambiance" value="Ambiance" />
           <Picker.Item label="Groups" value="Groups" />
+          <Picker.Item label="Food" value="Food" />
+          <Picker.Item label="Drinks" value="Drinks" />
+          <Picker.Item label="Casual" value="Casual" />
+          <Picker.Item label="Fancy" value="Fancy" />
         </Picker>
-        <Text onPress={this.addTag}>Add Tag</Text>
+        <View style={styles.center}>
+          <TouchableOpacity style={styles.addTag}>
+            <Text style={styles.addTagText} onPress={this.addTag}>
+              Add Tag
+            </Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity style={styles.buttonContainer}>
           <Text style={styles.buttonText} onPress={() => this.addPlace()}>
             ADD
@@ -120,10 +136,10 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 5,
-    height: 100,
+    height: 40,
   },
   buttonContainer: {
-    backgroundColor: '#ff9f1a',
+    backgroundColor: '#eb4d4b',
     padding: 20,
     borderRadius: 20,
     marginTop: 20,
@@ -133,11 +149,24 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 20,
   },
+  addTag: {
+    backgroundColor: '#4834d4',
+    width: 140,
+    padding: 10,
+    borderRadius: 20,
+  },
+  addTagText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  center: {
+    alignItems: 'center',
+  },
 });
 
 const mapDispatch = dispatch => ({
-  addNewPlace: (groupName, userEmail, placeInfo) =>
-    dispatch(addNewPlace(groupName, userEmail, placeInfo)),
+  addNewPlace: (groupName, members, placeInfo) =>
+    dispatch(addNewPlace(groupName, members, placeInfo)),
 });
 
 export default connect(

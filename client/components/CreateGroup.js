@@ -13,10 +13,11 @@ import { createGroup, addAllMembers } from '../store/reducers/group';
 class CreateGroup extends Component {
   constructor(props) {
     super(props);
+    const user = firebase.auth().currentUser;
     this.state = {
       groupName: '',
       userEmail: '',
-      friends: [],
+      friends: [user.email],
     };
     this.addUser = this.addUser.bind(this);
     this.create = this.create.bind(this);
@@ -26,10 +27,9 @@ class CreateGroup extends Component {
     this.setState({ userEmail: '' });
   }
   create(groupName, friends) {
-    const user = firebase.auth().currentUser;
-    this.props.createGroup(groupName, user.email);
-    friends.map(friend => this.props.createGroup(groupName, friend));
-    this.props.addAllMembers(this.state.friends, groupName);
+    this.props.createGroup(groupName, this.state.friends);
+    // friends.map(friend => this.props.createGroup(groupName, friend));
+    // this.props.addAllMembers(this.state.friends, groupName);
     this.props.navigation.navigate('MyGroups');
   }
   render() {
@@ -49,16 +49,20 @@ class CreateGroup extends Component {
             value={this.state.userEmail}
           />
         </View>
-        {this.state.friends
-          ? this.state.friends.map((friend, index) => (
-              <Text key={index}>{friend}</Text>
-            ))
-          : null}
-        <TouchableOpacity style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.addButton}>
           <Text onPress={() => this.addUser()} style={styles.buttonText}>
             add friend
           </Text>
         </TouchableOpacity>
+        <Text style={styles.text}>Friends currently in group:</Text>
+        {this.state.friends
+          ? this.state.friends.map((friend, index) => (
+              <Text style={styles.subText} key={index}>
+                {friend}
+              </Text>
+            ))
+          : null}
+
         <TouchableOpacity style={styles.buttonContainer}>
           <Text
             onPress={() =>
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   buttonContainer: {
-    backgroundColor: '#ff9f1a',
+    backgroundColor: '#eb4d4b',
     padding: 20,
     borderRadius: 20,
     marginTop: 20,
@@ -92,6 +96,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#FFFFFF',
     fontSize: 20,
+  },
+  addButton: {
+    width: 140,
+    backgroundColor: '#eb4d4b',
+    marginBottom: 20,
+    marginTop: 20,
+    padding: 5,
+    borderRadius: 20,
+  },
+  text: {
+    fontSize: 20,
+    paddingBottom: 20,
+  },
+  subText: {
+    paddingBottom: 10,
   },
 });
 

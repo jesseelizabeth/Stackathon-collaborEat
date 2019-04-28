@@ -3,6 +3,7 @@ import firebase from 'firebase';
 // action type
 const CREATE_GROUP = 'CREATE_GROUP';
 const ADD_MEMBERS = 'ADD_MEMBERS';
+const FETCH_GROUP = 'FETCH_GROUP';
 
 // action creator
 const newGroup = group => ({
@@ -15,16 +16,41 @@ const addMembers = members => ({
   members,
 });
 
+const gotGroup = group => ({
+  type: FETCH_GROUP,
+  group,
+});
+
 // thunk
-export const createGroup = (groupName, userEmail) => async dispatch => {
+export const createGroup = (groupName, members) => async dispatch => {
+  const group = await members.forEach(member =>
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(member)
+      .collection('groups')
+      .doc(groupName)
+      .set({ groupName, members }, { merge: true })
+  );
+  // const group = await firebase
+  //   .firestore()
+  //   .collection('users')
+  //   .doc(userEmail)
+  //   .collection('groups')
+  //   .doc()
+  //   .set({ groupName });
+  dispatch(newGroup(group));
+};
+
+export const fetchGroup = (groupName, user) => async dispatch => {
   const group = await firebase
     .firestore()
     .collection('users')
-    .doc(userEmail)
+    .doc(user)
     .collection('groups')
-    .doc()
-    .set({ groupName });
-  dispatch(newGroup(group));
+    .doc(groupName)
+    .get();
+  dispatch(gotGroup(group));
 };
 
 export const addAllMembers = (members, groupName) => async dispatch => {
@@ -35,7 +61,7 @@ export const addAllMembers = (members, groupName) => async dispatch => {
       .doc(member)
       .collection('groups')
       .doc(groupName)
-      .set({ members }, { merge: true })
+      .set({ groupName, members }, { merge: true })
   );
   dispatch(addMembers(members));
 };

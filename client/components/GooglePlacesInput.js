@@ -5,7 +5,8 @@ import AddPlace from './AddPlace';
 import { withNavigation } from 'react-navigation';
 
 const GooglePlacesInput = props => {
-  const { groupName } = props;
+  const { groupName, members } = props;
+  console.log(members);
   return (
     <GooglePlacesAutocomplete
       placeholder="Add a new place"
@@ -23,6 +24,7 @@ const GooglePlacesInput = props => {
         const website = details.website;
         const phone = details.formatted_phone_number;
         return props.navigation.navigate('AddPlace', {
+          members,
           groupName,
           name,
           address,
