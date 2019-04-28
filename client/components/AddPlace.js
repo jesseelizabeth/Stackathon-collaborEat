@@ -44,11 +44,12 @@ class AddPlace extends Component {
       description,
       tags,
     } = this.state;
+
     const user = firebase.auth().currentUser;
     if (priceLevel === undefined) {
       priceLevel = ' ';
     }
-    this.props.addNewPlace(groupName, user.email, {
+    this.props.addNewPlace(groupName, members, {
       name,
       address,
       priceLevel,
@@ -65,6 +66,7 @@ class AddPlace extends Component {
     this.setState({ tag: '' });
   }
   render() {
+    console.log('MEMBERS', this.state.members);
     const {
       name,
       address,

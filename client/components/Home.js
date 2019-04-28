@@ -23,13 +23,15 @@ export default class Home extends Component {
           />
         </View>
         <View style={styles.formContainer}>
-          <Login n />
+          <Login />
         </View>
-        <Button
-          color="white"
-          onPress={() => this.props.navigation.navigate('Signup')}
-          title="Sign Up"
-        />
+        <View style={styles.signup}>
+          <Button
+            color="white"
+            onPress={() => this.props.navigation.navigate('Signup')}
+            title="Sign Up"
+          />
+        </View>
       </KeyboardAvoidingView>
     );
   }
@@ -58,5 +60,8 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: '#FFF',
     textAlign: 'center',
+  },
+  signup: {
+    marginBottom: 20,
   },
 });

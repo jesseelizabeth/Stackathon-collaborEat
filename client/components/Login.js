@@ -90,11 +90,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#eb4d4b',
     paddingVertical: 15,
     marginBottom: 10,
+    borderRadius: 20,
   },
   buttonText: {
     textAlign: 'center',
     color: '#FFFFFF',
     fontWeight: '700',
+    fontSize: 16,
   },
 });
 

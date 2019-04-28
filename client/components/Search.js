@@ -11,7 +11,7 @@ class Search extends Component {
     console.log('SEARCH GROUP', members);
     return (
       <View style={styles.container}>
-        <GooglePlacesInput groupName={groupName} />
+        <GooglePlacesInput groupName={groupName} members={members} />
       </View>
     );
   }

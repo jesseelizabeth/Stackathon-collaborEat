@@ -12,19 +12,34 @@ const newPlace = place => ({
 // thunk
 export const addNewPlace = (
   groupName,
-  userEmail,
+  members,
   placeInfo
 ) => async dispatch => {
-  const place = await firebase
-    .firestore()
-    .collection('users')
-    .doc(userEmail)
-    .collection('groups')
-    .doc(groupName)
-    .collection('places')
-    .doc()
-    .set(placeInfo);
-  dispatch(newPlace(place));
+  if (members.length) {
+    const place = await members.forEach(member =>
+      firebase
+        .firestore()
+        .collection('users')
+        .doc(member)
+        .collection('groups')
+        .doc(groupName)
+        .collection('places')
+        .doc()
+        .set(placeInfo)
+    );
+    dispatch(newPlace(place));
+  } else {
+    const place = await firebase
+      .firestore()
+      .collection('users')
+      .doc(members[0])
+      .collection('groups')
+      .doc(groupName)
+      .collection('places')
+      .doc()
+      .set(placeInfo);
+    dispatch(newPlace(place));
+  }
 };
 
 const initialState = {

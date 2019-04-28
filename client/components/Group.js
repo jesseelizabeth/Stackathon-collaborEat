@@ -5,6 +5,7 @@ import {
   View,
   ActivityIndicator,
   Text,
+  ScrollView,
 } from 'react-native';
 import firebase from 'firebase';
 import { withNavigation } from 'react-navigation';
@@ -37,11 +38,11 @@ class Group extends Component {
             <Text
               onPress={() =>
                 this.props.navigation.navigate('Search', {
-                  members: group,
+                  members: [...group.members],
                   groupName: group.groupName,
                 })
               }
-              style={styles.buttonText}
+              style={styles.addPlaceText}
             >
               ADD A PLACE
             </Text>
@@ -51,37 +52,40 @@ class Group extends Component {
     }
 
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>{group.groupName}</Text>
-        <Text style={styles.text}>Members of this group: </Text>
-        <Text style={styles.text}>{group.members.join(', ')}</Text>
-        {places.map((place, index) => (
-          <View key={index}>
-            <TouchableOpacity style={styles.buttonContainer}>
-              <Text
-                onPress={() =>
-                  this.props.navigation.navigate('PlaceDetails', { place })
-                }
-                style={styles.buttonText}
-              >
-                {place.name}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ))}
-        <TouchableOpacity style={styles.addButtonContainer}>
-          <Text
-            onPress={() =>
-              this.props.navigation.navigate('Search', {
-                groupName: group.groupName,
-              })
-            }
-            style={styles.buttonText}
-          >
-            ADD A PLACE
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <ScrollView>
+        <View style={styles.container}>
+          <Text style={styles.title}>{group.groupName}</Text>
+          <Text style={styles.text}>Members of this group: </Text>
+          <Text style={styles.text}>{group.members.join(', ')}</Text>
+          {places.map((place, index) => (
+            <View key={index}>
+              <TouchableOpacity style={styles.buttonContainer}>
+                <Text
+                  onPress={() =>
+                    this.props.navigation.navigate('PlaceDetails', { place })
+                  }
+                  style={styles.buttonText}
+                >
+                  {place.name}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+          <TouchableOpacity style={styles.addButtonContainer}>
+            <Text
+              style={styles.addPlaceText}
+              onPress={() =>
+                this.props.navigation.navigate('Search', {
+                  groupName: group.groupName,
+                  members: [...group.members],
+                })
+              }
+            >
+              ADD A PLACE
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -117,11 +121,17 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 20,
     marginTop: 20,
+    justifyContent: 'center',
   },
   text: {
     textAlign: 'center',
     fontSize: 16,
     marginBottom: 10,
+  },
+  addPlaceText: {
+    textAlign: 'center',
+    color: 'black',
+    fontSize: 20,
   },
 });
 

@@ -5,6 +5,7 @@ import {
   View,
   Linking,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import Communications from 'react-native-communications';
 import { withNavigation } from 'react-navigation';
@@ -14,35 +15,37 @@ class PlaceDetails extends Component {
     const { navigation } = this.props;
     const place = navigation.getParam('place');
     return (
-      <View style={styles.container}>
-        <Text style={styles.title}>{place.name}</Text>
-        <Text style={styles.text}>{place.address}</Text>
-        <Text style={styles.text}>Price Level: {place.priceLevel}</Text>
-        <Text style={styles.text}>Star Rating: {place.starRating}</Text>
-        <Text
-          style={styles.text}
-          onPress={() => Linking.openURL(place.website)}
-        >
-          {place.website}
-        </Text>
-        <Text
-          style={styles.text}
-          onPress={() => Communications.phonecall(place.phone, true)}
-        >
-          {' '}
-          {place.phone}
-        </Text>
-        <Text style={styles.title}>Description:</Text>
-        <Text style={styles.text}>{place.description}</Text>
-        <Text style={styles.title}>Good for:</Text>
-        {place.tags
-          ? place.tags.map((tag, index) => (
-              <TouchableOpacity style={styles.tags} key={index}>
-                <Text style={styles.tag}>{tag}</Text>
-              </TouchableOpacity>
-            ))
-          : null}
-      </View>
+      <ScrollView>
+        <View style={styles.container}>
+          <Text style={styles.title}>{place.name}</Text>
+          <Text style={styles.text}>{place.address}</Text>
+          <Text style={styles.text}>Price Level: {place.priceLevel}</Text>
+          <Text style={styles.text}>Star Rating: {place.starRating}</Text>
+          <Text
+            style={styles.text}
+            onPress={() => Linking.openURL(place.website)}
+          >
+            {place.website}
+          </Text>
+          <Text
+            style={styles.text}
+            onPress={() => Communications.phonecall(place.phone, true)}
+          >
+            {' '}
+            {place.phone}
+          </Text>
+          <Text style={styles.title}>Description:</Text>
+          <Text style={styles.text}>{place.description}</Text>
+          <Text style={styles.title}>Good for:</Text>
+          {place.tags
+            ? place.tags.map((tag, index) => (
+                <TouchableOpacity style={styles.tags} key={index}>
+                  <Text style={styles.tag}>{tag}</Text>
+                </TouchableOpacity>
+              ))
+            : null}
+        </View>
+      </ScrollView>
     );
   }
 }
