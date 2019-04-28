@@ -16,12 +16,20 @@ export default class CreateGroup extends Component {
       userEmail: '',
       friends: [],
     };
-    // this.addUser = this.addUser.bind(this);
+    this.addUser = this.addUser.bind(this);
     this.createGroup = this.createGroup.bind(this);
   }
-  // addUser() {
-  //   this.ref.get({ email: this.state.userEmail });
-  // }
+  addUser(groupName) {
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(this.state.userEmail)
+      .collection('groups')
+      .doc()
+      .set({ groupName });
+    this.state.friends.push(this.state.userEmail);
+    this.setState({ userEmail: '' });
+  }
   createGroup(groupName) {
     const user = firebase.auth().currentUser;
     firebase
@@ -45,17 +53,28 @@ export default class CreateGroup extends Component {
         </View>
         <View style={styles.input}>
           <TextInput
-            placeholder="Add friends"
+            placeholder="Add a friend"
             onChangeText={userEmail => this.setState({ userEmail })}
             value={this.state.userEmail}
           />
         </View>
+        {this.state.friends
+          ? this.state.friends.map(friend => <Text>{friend}</Text>)
+          : null}
+        <TouchableOpacity style={styles.buttonContainer}>
+          <Text
+            onPress={() => this.addUser(this.state.groupName)}
+            style={styles.buttonText}
+          >
+            add friend
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.buttonContainer}>
           <Text
             onPress={() => this.createGroup(this.state.groupName)}
             style={styles.buttonText}
           >
-            ADD
+            CREATE GROUP
           </Text>
         </TouchableOpacity>
       </View>
