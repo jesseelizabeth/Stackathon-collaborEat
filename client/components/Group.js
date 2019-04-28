@@ -1,26 +1,65 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, StyleSheet, View, Button, Text } from 'react-native';
-import GooglePlacesInput from './GooglePlacesInput';
-import Search from './Search';
+import firebase from 'firebase';
 
 export default class Group extends Component {
+  constructor() {
+    super();
+    this.state = {
+      places: [],
+    };
+  }
+  componentDidMount() {
+    const user = firebase.auth().currentUser;
+    const { navigation } = this.props;
+    const group = navigation.getParam('group');
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(user.email)
+      .collection('groups')
+      .doc(group.groupName)
+      .collection('places')
+      .get()
+      .then(snapshot => {
+        snapshot.docs.forEach(doc => {
+          this.state.places.push(doc.data());
+        });
+      });
+  }
   render() {
+    const { places } = this.state;
     const { navigation } = this.props;
     const group = navigation.getParam('group');
     return (
       <View style={styles.container}>
         <Text style={styles.groupName}>{group.groupName}</Text>
-        <TouchableOpacity style={styles.buttonContainer}>
+        {places.map((place, index) => (
+          <View key={index}>
+            <TouchableOpacity style={styles.buttonContainer}>
+              <Text
+                onPress={() =>
+                  this.props.navigation.navigate('PlaceDetails', { place })
+                }
+                style={styles.buttonText}
+              >
+                {place.name}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+        <TouchableOpacity style={styles.addButtonContainer}>
           <Text
-            onPress={() => this.props.navigation.navigate('Search')}
+            onPress={() =>
+              this.props.navigation.navigate('Search', {
+                groupName: group.groupName,
+              })
+            }
             style={styles.buttonText}
           >
             ADD A PLACE
           </Text>
         </TouchableOpacity>
-        <View style={styles.search}>
-          <GooglePlacesInput groupName={group.groupName} />
-        </View>
       </View>
     );
   }
@@ -48,5 +87,11 @@ const styles = StyleSheet.create({
   },
   search: {
     height: 200,
+  },
+  addButtonContainer: {
+    backgroundColor: 'blue',
+    padding: 20,
+    borderRadius: 20,
+    marginTop: 20,
   },
 });

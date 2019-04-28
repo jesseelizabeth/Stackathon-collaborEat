@@ -42,7 +42,16 @@ export default class AddPlace extends Component {
       .doc(this.state.groupName) // target specific group
       .collection('places')
       .doc();
-    placeRef.set({ name, address, priceLevel, starRating, website, phone });
+    placeRef.set({
+      name,
+      address,
+      priceLevel,
+      starRating,
+      website,
+      phone,
+      description: this.state.description,
+    });
+    return this.props.navigation.navigate('MyGroups');
   }
   render() {
     const {

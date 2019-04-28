@@ -35,6 +35,9 @@ export default class MyGroups extends Component {
   }
   render() {
     const groups = this.state.groups;
+    if (!groups.length) {
+      return <Text>No Groups</Text>;
+    }
     return (
       <ScrollView>
         <View style={styles.container}>

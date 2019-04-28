@@ -5,14 +5,20 @@ import { withNavigation } from 'react-navigation';
 
 class Search extends Component {
   render() {
+    const { navigation } = this.props;
+    const groupName = navigation.getParam('groupName');
     return (
-      <View>
-        <GooglePlacesInput />
+      <View style={styles.container}>
+        <GooglePlacesInput groupName={groupName} />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    height: 400,
+  },
+});
 
 export default withNavigation(Search);
