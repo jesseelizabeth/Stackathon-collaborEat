@@ -41,11 +41,9 @@ export default class MyGroups extends Component {
     } else if (!loading && !groups.length) {
       return <Text>No Groups</Text>;
     }
-
     return (
       <ScrollView>
         <View style={styles.container}>
-          {/* <Group /> */}
           {groups.map((group, index) => (
             <View key={index} style={styles.view}>
               <TouchableOpacity style={styles.groupContainer}>
