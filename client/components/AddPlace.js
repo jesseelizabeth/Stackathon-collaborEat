@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Picker,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -28,9 +29,11 @@ export default class AddPlace extends Component {
       website,
       phone,
       description: '',
-      // tags: []
+      tags: [],
+      tag: '',
     };
     this.addPlace = this.addPlace.bind(this);
+    this.addTag = this.addTag.bind(this);
   }
   addPlace(name, address, priceLevel, starRating, website, phone) {
     const user = firebase.auth().currentUser;
@@ -50,8 +53,13 @@ export default class AddPlace extends Component {
       website,
       phone,
       description: this.state.description,
+      tags: this.state.tags,
     });
     return this.props.navigation.navigate('MyGroups');
+  }
+  addTag() {
+    this.state.tags.push(this.state.tag);
+    this.setState({ tag: '' });
   }
   render() {
     const {
@@ -76,6 +84,20 @@ export default class AddPlace extends Component {
           onChangeText={description => this.setState({ description })}
           value={this.state.description}
         />
+        {this.state.tags.length
+          ? this.state.tags.map(tag => <Text key={tag}>{tag}</Text>)
+          : null}
+        <Picker
+          selectedValue={this.state.tag}
+          onValueChange={(itemValue, itemIndex) =>
+            this.setState({ tag: itemValue })
+          }
+        >
+          <Picker.Item label="Dates" value="Dates" />
+          <Picker.Item label="Ambiance" value="Ambiance" />
+          <Picker.Item label="Groups" value="Groups" />
+        </Picker>
+        <Text onPress={this.addTag}>Add Tag</Text>
         <TouchableOpacity style={styles.buttonContainer}>
           <Text
             style={styles.buttonText}

@@ -27,6 +27,13 @@ class PlaceDetails extends Component {
           {place.phone}
         </Text>
         <Text style={styles.text}>{place.description}</Text>
+        {place.tags
+          ? place.tags.map((tag, index) => (
+              <Text style={styles.text} key={index}>
+                {tag}
+              </Text>
+            ))
+          : null}
       </View>
     );
   }
