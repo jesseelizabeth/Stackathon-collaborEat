@@ -93,6 +93,7 @@ export default class AddPlace extends Component {
             this.setState({ tag: itemValue })
           }
         >
+          <Picker.Item label="Add some tags" value="add some tags" />
           <Picker.Item label="Dates" value="Dates" />
           <Picker.Item label="Ambiance" value="Ambiance" />
           <Picker.Item label="Groups" value="Groups" />

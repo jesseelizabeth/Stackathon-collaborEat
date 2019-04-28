@@ -4,22 +4,20 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  ActivityInicator,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import Group from './Group';
 import firebase from 'firebase';
-import { FlatList } from 'react-native-gesture-handler';
 
 export default class MyGroups extends Component {
   constructor() {
     super();
     this.state = {
       groups: [],
+      loading: true,
     };
-    // this.fetchGroups = this.fetchGroups.bind(this);
   }
-  componentWillMount() {
+  componentDidMount() {
     const user = firebase.auth().currentUser;
     firebase
       .firestore()
@@ -29,15 +27,21 @@ export default class MyGroups extends Component {
       .get()
       .then(snapshot => {
         snapshot.docs.forEach(doc => {
-          this.state.groups.push(doc.data());
+          this.setState(prevState => ({
+            groups: [doc.data(), ...prevState.groups],
+          }));
         });
+        this.setState({ loading: false });
       });
   }
   render() {
-    const groups = this.state.groups;
-    if (!groups.length) {
+    const { groups, loading } = this.state;
+    if (loading) {
+      return <ActivityIndicator />;
+    } else if (!loading && !groups.length) {
       return <Text>No Groups</Text>;
     }
+
     return (
       <ScrollView>
         <View style={styles.container}>

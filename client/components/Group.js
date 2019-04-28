@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, StyleSheet, View, Button, Text } from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
 import firebase from 'firebase';
 
 export default class Group extends Component {
@@ -7,6 +13,7 @@ export default class Group extends Component {
     super();
     this.state = {
       places: [],
+      loading: true,
     };
   }
   componentDidMount() {
@@ -23,14 +30,40 @@ export default class Group extends Component {
       .get()
       .then(snapshot => {
         snapshot.docs.forEach(doc => {
-          this.state.places.push(doc.data());
+          // this.state.places.push(doc.data());
+          this.setState(prevState => ({
+            places: [doc.data(), ...prevState.places],
+          }));
         });
+        this.setState({ loading: false });
       });
   }
   render() {
-    const { places } = this.state;
+    const { places, loading } = this.state;
     const { navigation } = this.props;
     const group = navigation.getParam('group');
+    if (loading) {
+      return <ActivityIndicator />;
+    } else if (!loading && !places.length) {
+      return (
+        <View>
+          <Text>No Places</Text>
+          <TouchableOpacity style={styles.addButtonContainer}>
+            <Text
+              onPress={() =>
+                this.props.navigation.navigate('Search', {
+                  groupName: group.groupName,
+                })
+              }
+              style={styles.buttonText}
+            >
+              ADD A PLACE
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Text style={styles.groupName}>{group.groupName}</Text>

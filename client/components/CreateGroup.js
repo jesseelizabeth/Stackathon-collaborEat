@@ -30,7 +30,7 @@ export default class CreateGroup extends Component {
     this.state.friends.push(this.state.userEmail);
     this.setState({ userEmail: '' });
   }
-  createGroup(groupName) {
+  createGroup(groupName, friends) {
     const user = firebase.auth().currentUser;
     firebase
       .firestore()
@@ -39,6 +39,15 @@ export default class CreateGroup extends Component {
       .collection('groups')
       .doc()
       .set({ groupName });
+    friends.map(friend =>
+      firebase
+        .firestore()
+        .collection('users')
+        .doc(friend)
+        .collection('groups')
+        .doc()
+        .set({ groupName })
+    );
     this.props.navigation.navigate('MyGroups');
   }
   render() {
@@ -59,7 +68,9 @@ export default class CreateGroup extends Component {
           />
         </View>
         {this.state.friends
-          ? this.state.friends.map(friend => <Text>{friend}</Text>)
+          ? this.state.friends.map((friend, index) => (
+              <Text key={index}>{friend}</Text>
+            ))
           : null}
         <TouchableOpacity style={styles.buttonContainer}>
           <Text
@@ -71,7 +82,9 @@ export default class CreateGroup extends Component {
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonContainer}>
           <Text
-            onPress={() => this.createGroup(this.state.groupName)}
+            onPress={() =>
+              this.createGroup(this.state.groupName, this.state.friends)
+            }
             style={styles.buttonText}
           >
             CREATE GROUP
