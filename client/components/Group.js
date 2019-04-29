@@ -12,6 +12,7 @@ import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux';
 import { fetchPlaces } from '../store/reducers/places';
 import { fetchGroup } from '../store/reducers/group';
+import Filter from './Filter';
 
 class Group extends Component {
   componentDidMount() {
@@ -24,7 +25,6 @@ class Group extends Component {
     const { places, loading } = this.props.places;
     const { navigation } = this.props;
     const group = navigation.getParam('group');
-    console.log('GROUPPPPP', group);
     if (loading) {
       return <ActivityIndicator size="large" />;
     } else if (!loading && !places.length) {

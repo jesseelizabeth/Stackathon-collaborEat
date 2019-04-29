@@ -76,7 +76,7 @@ export default function(state = initialState, action) {
     case CREATE_GROUP:
       return { ...state, group: action.group, loading: false };
     case ADD_MEMBERS:
-      return { ...state, members: action.members };
+      return { ...state, members: action.members, loadig: false };
     default:
       return state;
   }
