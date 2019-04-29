@@ -11,6 +11,12 @@ import {
 import firebase from 'firebase';
 
 export default class Signup extends Component {
+  static navigationOptions = {
+    headerStyle: {
+      backgroundColor: '#4834d4',
+    },
+    headerTintColor: '#fff',
+  };
   constructor(props) {
     super(props);
     this.ref = firebase.firestore().collection('users');
@@ -98,11 +104,13 @@ const styles = StyleSheet.create({
     color: '#FFF',
     paddingHorizontal: 10,
     fontSize: 16,
+    borderRadius: 20,
   },
   buttonContainer: {
     backgroundColor: '#eb4d4b',
     paddingVertical: 15,
     marginBottom: 10,
+    borderRadius: 20,
   },
   buttonText: {
     textAlign: 'center',

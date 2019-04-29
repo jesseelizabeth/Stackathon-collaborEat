@@ -25,6 +25,9 @@ class MyGroups extends Component {
     }
     return (
       <ScrollView>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Your Groups:</Text>
+        </View>
         <View style={styles.container}>
           {groups.map((group, index) => (
             <View key={index} style={styles.view}>
@@ -65,7 +68,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   view: {
+    padding: 15,
+  },
+  title: {
+    fontSize: 26,
+    textAlign: 'center',
     padding: 20,
+    fontWeight: 'bold',
   },
 });
 

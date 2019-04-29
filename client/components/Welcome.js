@@ -4,6 +4,12 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import firebase from 'firebase';
 
 export default class Welcome extends React.Component {
+  static navigationOptions = {
+    headerStyle: {
+      backgroundColor: '#4834d4',
+    },
+    headerTintColor: '#fff',
+  };
   render() {
     const user = firebase.auth().currentUser;
     return (

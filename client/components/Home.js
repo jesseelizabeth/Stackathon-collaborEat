@@ -10,6 +10,9 @@ import {
 import Login from './Login';
 
 export default class Home extends Component {
+  static navigationOptions = {
+    header: null,
+  };
   render() {
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>

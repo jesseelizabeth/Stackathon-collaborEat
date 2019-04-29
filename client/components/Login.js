@@ -12,8 +12,14 @@ import { withNavigation } from 'react-navigation';
 import firebase from 'firebase';
 
 class Login extends Component {
+  static navigationOptions = {
+    headerStyle: {
+      backgroundColor: '#4834d4',
+    },
+  };
   constructor(props) {
     super(props);
+
     this.state = {
       loading: false,
       email: '',
@@ -85,6 +91,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     paddingHorizontal: 10,
     fontSize: 16,
+    borderRadius: 20,
   },
   buttonContainer: {
     backgroundColor: '#eb4d4b',
