@@ -26,7 +26,7 @@ class Group extends Component {
     const group = navigation.getParam('group');
     console.log('GROUPPPPP', group);
     if (loading) {
-      return <ActivityIndicator />;
+      return <ActivityIndicator size="large" />;
     } else if (!loading && !places.length) {
       return (
         <View style={styles.container}>

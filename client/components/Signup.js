@@ -49,7 +49,7 @@ export default class Signup extends Component {
 
   render() {
     if (this.state.loading) {
-      return <ActivityIndicator />;
+      return <ActivityIndicator size="large" />;
     }
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>

@@ -19,7 +19,7 @@ class MyGroups extends Component {
   render() {
     const { groups, loading } = this.props.groups;
     if (loading) {
-      return <ActivityIndicator />;
+      return <ActivityIndicator size="large" />;
     } else if (!loading && !groups.length) {
       return <Text>No Groups</Text>;
     }
