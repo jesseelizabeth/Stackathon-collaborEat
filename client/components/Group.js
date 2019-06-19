@@ -24,7 +24,6 @@ class Group extends Component {
     const { places, loading } = this.props.places;
     const { navigation } = this.props;
     const group = navigation.getParam('group');
-    console.log('GROUPPPPP', group);
     if (loading) {
       return <ActivityIndicator size="large" />;
     } else if (!loading && !places.length) {

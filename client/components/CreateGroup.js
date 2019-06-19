@@ -26,11 +26,10 @@ class CreateGroup extends Component {
     this.state.friends.push(this.state.userEmail);
     this.setState({ userEmail: '' });
   }
-  create(groupName, friends) {
-    this.props.createGroup(groupName, this.state.friends);
-    // friends.map(friend => this.props.createGroup(groupName, friend));
-    // this.props.addAllMembers(this.state.friends, groupName);
-    this.props.navigation.navigate('MyGroups');
+  create(groupName) {
+    const { createGroup, navigation } = this.props;
+    createGroup(groupName, this.state.friends);
+    navigation.navigate('MyGroups');
   }
   render() {
     return (
@@ -63,15 +62,11 @@ class CreateGroup extends Component {
             ))
           : null}
 
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text
-            onPress={() =>
-              this.create(this.state.groupName, this.state.friends)
-            }
-            style={styles.buttonText}
-          >
-            CREATE GROUP
-          </Text>
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => this.create(this.state.groupName)}
+        >
+          <Text style={styles.buttonText}>CREATE GROUP</Text>
         </TouchableOpacity>
       </View>
     );

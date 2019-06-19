@@ -6,8 +6,9 @@ import {
   TextInput,
   TouchableOpacity,
   Picker,
+  ScrollView,
+  Alert,
 } from 'react-native';
-import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { addNewPlace } from '../store/reducers/place';
 
@@ -45,7 +46,6 @@ class AddPlace extends Component {
       tags,
     } = this.state;
 
-    const user = firebase.auth().currentUser;
     if (priceLevel === undefined) {
       priceLevel = ' ';
     }
@@ -62,11 +62,17 @@ class AddPlace extends Component {
     return this.props.navigation.navigate('MyGroups');
   }
   addTag() {
-    this.state.tags.push(this.state.tag);
+    const { tags, tag } = this.state;
+    if (tags.includes(tag)) {
+      Alert.alert('', 'You already added this tag!', [{ text: 'OK' }], {
+        cancelable: false,
+      });
+    } else {
+      tags.push(tag);
+    }
     this.setState({ tag: '' });
   }
   render() {
-    console.log('MEMBERS', this.state.members);
     const {
       name,
       address,
@@ -76,54 +82,56 @@ class AddPlace extends Component {
       phone,
     } = this.state;
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>{name}</Text>
-        <Text style={styles.text}>{address}</Text>
-        <Text style={styles.text}>Price Level: {priceLevel}</Text>
-        <Text style={styles.text}>Star Rating: {starRating}</Text>
-        <Text style={styles.text}>{website}</Text>
-        <Text style={styles.text}>{phone}</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Description"
-          onChangeText={description => this.setState({ description })}
-          value={this.state.description}
-        />
-        {this.state.tags.length
-          ? this.state.tags.map(tag => (
-              <Text style={styles.text} key={tag}>
-                {tag}
+      <ScrollView>
+        <View style={styles.container}>
+          <Text style={styles.text}>{name}</Text>
+          <Text style={styles.text}>{address}</Text>
+          <Text style={styles.text}>Price Level: {priceLevel}</Text>
+          <Text style={styles.text}>Star Rating: {starRating}</Text>
+          <Text style={styles.text}>{website}</Text>
+          <Text style={styles.text}>{phone}</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Description"
+            onChangeText={description => this.setState({ description })}
+            value={this.state.description}
+          />
+          {this.state.tags.length
+            ? this.state.tags.map(tag => (
+                <Text style={styles.text} key={tag}>
+                  {tag}
+                </Text>
+              ))
+            : null}
+          <Picker
+            selectedValue={this.state.tag}
+            onValueChange={(itemValue, itemIndex) =>
+              this.setState({ tag: itemValue })
+            }
+          >
+            <Picker.Item label="Add some tags" value="add some tags" />
+            <Picker.Item label="Dates" value="Dates" />
+            <Picker.Item label="Ambiance" value="Ambiance" />
+            <Picker.Item label="Groups" value="Groups" />
+            <Picker.Item label="Food" value="Food" />
+            <Picker.Item label="Drinks" value="Drinks" />
+            <Picker.Item label="Casual" value="Casual" />
+            <Picker.Item label="Fancy" value="Fancy" />
+          </Picker>
+          <View style={styles.center}>
+            <TouchableOpacity style={styles.addTag}>
+              <Text style={styles.addTagText} onPress={this.addTag}>
+                Add Tag
               </Text>
-            ))
-          : null}
-        <Picker
-          selectedValue={this.state.tag}
-          onValueChange={(itemValue, itemIndex) =>
-            this.setState({ tag: itemValue })
-          }
-        >
-          <Picker.Item label="Add some tags" value="add some tags" />
-          <Picker.Item label="Dates" value="Dates" />
-          <Picker.Item label="Ambiance" value="Ambiance" />
-          <Picker.Item label="Groups" value="Groups" />
-          <Picker.Item label="Food" value="Food" />
-          <Picker.Item label="Drinks" value="Drinks" />
-          <Picker.Item label="Casual" value="Casual" />
-          <Picker.Item label="Fancy" value="Fancy" />
-        </Picker>
-        <View style={styles.center}>
-          <TouchableOpacity style={styles.addTag}>
-            <Text style={styles.addTagText} onPress={this.addTag}>
-              Add Tag
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.buttonContainer}>
+            <Text style={styles.buttonText} onPress={() => this.addPlace()}>
+              ADD
             </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text style={styles.buttonText} onPress={() => this.addPlace()}>
-            ADD
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     );
   }
 }

@@ -10,6 +10,7 @@ import {
 import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { fetchGroups } from '../store/reducers/groups';
+import NoGroups from './NoGroups';
 
 class MyGroups extends Component {
   componentDidMount() {
@@ -21,7 +22,7 @@ class MyGroups extends Component {
     if (loading) {
       return <ActivityIndicator size="large" />;
     } else if (!loading && !groups.length) {
-      return <Text>No Groups</Text>;
+      return <NoGroups />;
     }
     return (
       <ScrollView>

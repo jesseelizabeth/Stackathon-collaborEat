@@ -24,7 +24,6 @@ class Login extends Component {
       loading: false,
       email: '',
       password: '',
-      error: '',
     };
     this.login = this.login.bind(this);
   }
@@ -36,11 +35,11 @@ class Login extends Component {
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          this.setState({ error: '', loading: false });
+          this.setState({ loading: false });
           this.props.navigation.navigate('Welcome');
         });
     } catch (error) {
-      this.setState({ error: 'Authentication failed', loading: false });
+      this.setState({ loading: false });
     }
   }
   render() {

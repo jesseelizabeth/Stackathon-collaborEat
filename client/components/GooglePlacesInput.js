@@ -13,7 +13,7 @@ const GooglePlacesInput = props => {
       minLength={2} // minimum length of text to search
       autoFocus={false}
       returnKeyType="search"
-      listViewDisplayed="auto" // true/false/undefined
+      listViewDisplayed="auto"
       fetchDetails={true}
       renderDescription={row => row.description}
       onPress={(data, details = null) => {
@@ -60,10 +60,6 @@ const GooglePlacesInput = props => {
         fields: ['name', 'formatted_address'],
       }}
       debounce={200}
-      // renderLeftButton={() => (
-      //   <Image source={require('path/custom/left-icon')} />
-      // )}
-      // renderRightButton={() => <Text>Custom text after the input</Text>}
     />
   );
 };
