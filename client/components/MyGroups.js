@@ -7,15 +7,14 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { fetchGroups } from '../store/reducers/groups';
 import NoGroups from './NoGroups';
 
 class MyGroups extends Component {
   componentDidMount() {
-    const user = firebase.auth().currentUser;
-    this.props.fetchGroups(user.email);
+    const { user, fetchGroups } = this.props;
+    fetchGroups(user.uid);
   }
   render() {
     const { groups, loading } = this.props.groups;
@@ -50,6 +49,20 @@ class MyGroups extends Component {
   }
 }
 
+const mapState = state => ({
+  groups: state.groups,
+  user: state.auth.user,
+});
+
+const mapDispatch = dispatch => ({
+  fetchGroups: userId => dispatch(fetchGroups(userId)),
+});
+export default connect(
+  mapState,
+  mapDispatch
+)(MyGroups);
+
+// STYLES
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -78,15 +91,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-const mapState = state => ({
-  groups: state.groups,
-});
-
-const mapDispatch = dispatch => ({
-  fetchGroups: userEmail => dispatch(fetchGroups(userEmail)),
-});
-export default connect(
-  mapState,
-  mapDispatch
-)(MyGroups);

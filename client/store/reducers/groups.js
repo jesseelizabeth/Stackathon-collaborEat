@@ -15,12 +15,12 @@ const gotGroups = groups => ({
 });
 
 // thunk
-export const fetchGroups = userEmail => async dispatch => {
+export const fetchGroups = userId => async dispatch => {
   let groupsArr = [];
   const groups = await firebase
     .firestore()
     .collection('users')
-    .doc(userEmail)
+    .doc(userId)
     .collection('groups')
     .get();
   groups.docs.forEach(doc => {

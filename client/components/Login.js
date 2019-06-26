@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import firebase from 'firebase';
+import { login } from '../../utils/auth';
 
 class Login extends Component {
   static navigationOptions = {
@@ -19,26 +19,23 @@ class Login extends Component {
   };
   constructor(props) {
     super(props);
-
     this.state = {
       loading: false,
       email: '',
       password: '',
     };
-    this.login = this.login.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
-  login() {
+  handleLogin() {
     this.setState({ loading: true });
     const { email, password } = this.state;
     try {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          this.setState({ loading: false });
-          this.props.navigation.navigate('Welcome');
-        });
+      login(email, password).then(() => {
+        this.setState({ loading: false });
+        this.props.navigation.navigate('Welcome');
+      });
     } catch (error) {
+      console.log(error);
       this.setState({ loading: false });
     }
   }
@@ -70,7 +67,7 @@ class Login extends Component {
           style={styles.input}
         />
         <TouchableOpacity style={styles.buttonContainer}>
-          <Text onPress={this.login} style={styles.buttonText}>
+          <Text onPress={this.handleLogin} style={styles.buttonText}>
             LOGIN
           </Text>
         </TouchableOpacity>

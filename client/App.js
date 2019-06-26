@@ -9,6 +9,7 @@ import MyGroups from './components/MyGroups';
 import AddPlace from './components/AddPlace';
 import Group from './components/Group';
 import Search from './components/Search';
+import AddFriends from './components/AddFriends';
 import PlaceDetails from './components/PlaceDetails';
 import '../config/firebaseConfig';
 
@@ -21,6 +22,7 @@ const AppNavigator = createStackNavigator(
     Signup: Signup,
     Login: Login,
     Welcome: Welcome,
+    AddFriends: AddFriends,
     CreateGroup: CreateGroup,
     MyGroups: MyGroups,
     AddPlace: AddPlace,
