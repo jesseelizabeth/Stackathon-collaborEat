@@ -6,13 +6,7 @@ class NoGroups extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text> You have no groups! </Text>
-        <TouchableOpacity
-          style={styles.buttonContainer}
-          onPress={() => this.props.navigation.navigate('CreateGroup')}
-        >
-          <Text style={styles.text}> Create a group </Text>
-        </TouchableOpacity>
+        <Text style={styles.title}> You have no groups! </Text>
       </View>
     );
   }
@@ -33,6 +27,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     width: 260,
     textAlign: 'center',
+  },
+  title: {
+    fontSize: 26,
+    textAlign: 'center',
+    padding: 20,
+    fontWeight: 'bold',
   },
 });
 

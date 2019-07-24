@@ -20,33 +20,6 @@ class Welcome extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.welcomeText}>Welcome back {username}!</Text>
-        {/* MY GROUPS */}
-        <View style={styles.view}>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={() => this.props.navigation.navigate('MyGroups')}
-          >
-            <Text style={styles.text}>MY GROUPS</Text>
-          </TouchableOpacity>
-        </View>
-        {/* CREATE A GROUP */}
-        <View style={styles.view}>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={() => this.props.navigation.navigate('CreateGroup')}
-          >
-            <Text style={styles.text}>CREATE A GROUP</Text>
-          </TouchableOpacity>
-        </View>
-        {/* ADD FRIENDS */}
-        <View style={styles.view}>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={() => this.props.navigation.navigate('AddFriends')}
-          >
-            <Text style={styles.text}>ADD FRIENDS</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     );
   }

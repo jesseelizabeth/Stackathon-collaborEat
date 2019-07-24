@@ -13,8 +13,8 @@ import NoGroups from './NoGroups';
 
 class MyGroups extends Component {
   componentDidMount() {
-    const { user, fetchGroups } = this.props;
-    fetchGroups(user.uid);
+    const { user } = this.props;
+    this.props.fetchGroups(user.uid);
   }
   render() {
     const { groups, loading } = this.props.groups;

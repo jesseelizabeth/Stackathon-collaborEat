@@ -38,12 +38,17 @@ const MyGroupsStack = createStackNavigator({
   PlaceDetails: PlaceDetails,
 });
 
-// const MyFriendsStack = createStackNavigator({
-//   Friends:
-// })
+const CreateGroupStack = createStackNavigator({
+  CreateGroup: CreateGroup,
+  AddPlace: AddPlace,
+  Group: Group,
+  Search: Search,
+  PlaceDetails: PlaceDetails,
+});
 
 const TabNavigator = createBottomTabNavigator(
   {
+    'Create Group': CreateGroupStack,
     Home: HomeStack,
     Groups: MyGroupsStack,
   },
@@ -60,12 +65,15 @@ const TabNavigator = createBottomTabNavigator(
         } else if (routeName === 'Groups') {
           iconName = 'ios-people';
           size = 25;
+        } else if (routeName === 'Create Group') {
+          iconName = 'ios-person-add';
+          size = 25;
         }
         return <IconComponent name={iconName} size={size} color={tintColor} />;
       },
     }),
     tabBarOptions: {
-      activeTintColor: '#89BBFE',
+      activeTintColor: '#eb4d4b',
       inactiveTintColor: 'gray',
     },
   }
