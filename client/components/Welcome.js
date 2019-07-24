@@ -11,8 +11,8 @@ class Welcome extends React.Component {
     },
     headerTintColor: '#fff',
   };
-  componentDidMount() {
-    this.props.getUser();
+  async componentDidMount() {
+    await this.props.getUser();
   }
 
   render() {

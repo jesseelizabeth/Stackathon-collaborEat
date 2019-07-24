@@ -6,14 +6,13 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import firebase from 'firebase';
 import { connect } from 'react-redux';
 import { createGroup, addAllMembers } from '../store/reducers/group';
 
 class CreateGroup extends Component {
   constructor(props) {
     super(props);
-    const user = firebase.auth().currentUser;
+    const { user } = this.props;
     this.state = {
       groupName: '',
       userEmail: '',
@@ -73,6 +72,23 @@ class CreateGroup extends Component {
   }
 }
 
+const mapState = state => ({
+  user: state.auth.user,
+});
+
+const mapDispatch = dispatch => ({
+  createGroup: (groupName, userEmail) =>
+    dispatch(createGroup(groupName, userEmail)),
+  addAllMembers: (members, groupName) =>
+    dispatch(addAllMembers(members, groupName)),
+});
+
+export default connect(
+  mapState,
+  mapDispatch
+)(CreateGroup);
+
+// STYLES
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
@@ -108,15 +124,3 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
 });
-
-const mapDispatch = dispatch => ({
-  createGroup: (groupName, userEmail) =>
-    dispatch(createGroup(groupName, userEmail)),
-  addAllMembers: (members, groupName) =>
-    dispatch(addAllMembers(members, groupName)),
-});
-
-export default connect(
-  null,
-  mapDispatch
-)(CreateGroup);
