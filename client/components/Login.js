@@ -9,37 +9,39 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { withNavigation } from 'react-navigation';
-import firebase from 'firebase';
+import { login } from '../../utils/auth';
 
 class Login extends Component {
+  static navigationOptions = {
+    headerStyle: {
+      backgroundColor: '#4834d4',
+    },
+  };
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
       email: '',
       password: '',
-      error: '',
     };
-    this.login = this.login.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
   }
-  login() {
+  handleLogin() {
     this.setState({ loading: true });
     const { email, password } = this.state;
     try {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          this.setState({ error: '', loading: false });
-          this.props.navigation.navigate('Welcome');
-        });
+      login(email, password).then(() => {
+        this.setState({ loading: false });
+        this.props.navigation.navigate('Welcome');
+      });
     } catch (error) {
-      this.setState({ error: 'Authentication failed', loading: false });
+      console.log(error);
+      this.setState({ loading: false });
     }
   }
   render() {
     if (this.state.loading) {
-      return <ActivityIndicator />;
+      return <ActivityIndicator size="large" />;
     }
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -65,7 +67,7 @@ class Login extends Component {
           style={styles.input}
         />
         <TouchableOpacity style={styles.buttonContainer}>
-          <Text onPress={this.login} style={styles.buttonText}>
+          <Text onPress={this.handleLogin} style={styles.buttonText}>
             LOGIN
           </Text>
         </TouchableOpacity>
@@ -85,16 +87,19 @@ const styles = StyleSheet.create({
     color: '#FFF',
     paddingHorizontal: 10,
     fontSize: 16,
+    borderRadius: 20,
   },
   buttonContainer: {
-    backgroundColor: '#ff9f1a',
+    backgroundColor: '#eb4d4b',
     paddingVertical: 15,
     marginBottom: 10,
+    borderRadius: 20,
   },
   buttonText: {
     textAlign: 'center',
     color: '#FFFFFF',
     fontWeight: '700',
+    fontSize: 16,
   },
 });
 

@@ -4,13 +4,19 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  StatusBar,
   KeyboardAvoidingView,
   ActivityIndicator,
 } from 'react-native';
 import firebase from 'firebase';
+import { signup } from '../../utils/auth';
 
 export default class Signup extends Component {
+  static navigationOptions = {
+    headerStyle: {
+      backgroundColor: '#4834d4',
+    },
+    headerTintColor: '#fff',
+  };
   constructor(props) {
     super(props);
     this.ref = firebase.firestore().collection('users');
@@ -18,42 +24,48 @@ export default class Signup extends Component {
       loading: false,
       email: '',
       password: '',
-      error: '',
+      username: '',
     };
-    this.signup = this.signup.bind(this);
-    this.saveUser = this.saveUser.bind(this);
-    this.singUpAndSaveUser = this.singUpAndSaveUser.bind(this);
+    this.handleSignup = this.handleSignup.bind(this);
+    // this.saveUser = this.saveUser.bind(this);
+    // this.singUpAndSaveUser = this.singUpAndSaveUser.bind(this);
   }
-  signup() {
+  handleSignup() {
     this.setState({ loading: true });
-    const { email, password } = this.state;
+    const { email, password, username } = this.state;
     try {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then(() => {
-          this.setState({ error: '', loading: false });
-          this.props.navigation.navigate('Welcome');
-        });
+      signup(email, password, username).then(() => {
+        this.setState({ loading: false });
+        this.props.navigation.navigate('Welcome');
+      });
     } catch (error) {
-      this.setState({ error: 'Authentication failed', loading: false });
+      this.setState({ loading: false });
     }
   }
-  saveUser() {
-    this.ref.add({ email: this.state.email });
-  }
-  singUpAndSaveUser() {
-    this.saveUser();
-    this.signup();
-  }
+  // saveUser() {
+  //   this.ref.add({ email: this.state.email });
+  // }
+  // singUpAndSaveUser() {
+  //   this.saveUser();
+  //   this.handleSignup();
+  // }
 
   render() {
     if (this.state.loading) {
-      return <ActivityIndicator />;
+      return <ActivityIndicator size="large" />;
     }
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <StatusBar barStyle="light-content" />
+        <TextInput
+          placeholder="username"
+          placeholderTextColor="rgba(255,255,255,0.7)"
+          onChangeText={username => this.setState({ username })}
+          value={this.state.username}
+          returnKeyType="next"
+          autoCapitalize="none"
+          autoCorrect={false}
+          style={styles.input}
+        />
         <TextInput
           placeholder="email"
           placeholderTextColor="rgba(255,255,255,0.7)"
@@ -77,7 +89,7 @@ export default class Signup extends Component {
           ref={input => (this.passwordInput = input)}
         />
         <TouchableOpacity style={styles.buttonContainer}>
-          <Text onPress={this.singUpAndSaveUser} style={styles.buttonText}>
+          <Text onPress={this.handleSignup} style={styles.buttonText}>
             SIGN UP
           </Text>
         </TouchableOpacity>
@@ -89,7 +101,8 @@ export default class Signup extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffaf40',
+    backgroundColor: '#4834d4',
+    padding: 20,
   },
   input: {
     height: 40,
@@ -98,11 +111,13 @@ const styles = StyleSheet.create({
     color: '#FFF',
     paddingHorizontal: 10,
     fontSize: 16,
+    borderRadius: 20,
   },
   buttonContainer: {
-    backgroundColor: '#ff9f1a',
+    backgroundColor: '#eb4d4b',
     paddingVertical: 15,
     marginBottom: 10,
+    borderRadius: 20,
   },
   buttonText: {
     textAlign: 'center',

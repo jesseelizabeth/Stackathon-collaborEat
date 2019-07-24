@@ -10,6 +10,9 @@ import {
 import Login from './Login';
 
 export default class Home extends Component {
+  static navigationOptions = {
+    header: null,
+  };
   render() {
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -23,12 +26,15 @@ export default class Home extends Component {
           />
         </View>
         <View style={styles.formContainer}>
-          <Login n />
+          <Login />
         </View>
-        <Button
-          onPress={() => this.props.navigation.navigate('Signup')}
-          title="SIGN UP"
-        />
+        <View style={styles.signup}>
+          <Button
+            color="white"
+            onPress={() => this.props.navigation.navigate('Signup')}
+            title="Sign Up"
+          />
+        </View>
       </KeyboardAvoidingView>
     );
   }
@@ -37,7 +43,7 @@ export default class Home extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffaf40',
+    backgroundColor: '#4834d4',
   },
   titleContainer: {
     alignItems: 'center',
@@ -57,5 +63,8 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: '#FFF',
     textAlign: 'center',
+  },
+  signup: {
+    marginBottom: 20,
   },
 });

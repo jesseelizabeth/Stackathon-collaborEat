@@ -7,42 +7,27 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import firebase from 'firebase';
+import { connect } from 'react-redux';
+import { fetchGroups } from '../store/reducers/groups';
+import NoGroups from './NoGroups';
 
-export default class MyGroups extends Component {
-  constructor() {
-    super();
-    this.state = {
-      groups: [],
-      loading: true,
-    };
-  }
+class MyGroups extends Component {
   componentDidMount() {
-    const user = firebase.auth().currentUser;
-    firebase
-      .firestore()
-      .collection('users')
-      .doc(user.email)
-      .collection('groups')
-      .get()
-      .then(snapshot => {
-        snapshot.docs.forEach(doc => {
-          this.setState(prevState => ({
-            groups: [doc.data(), ...prevState.groups],
-          }));
-        });
-        this.setState({ loading: false });
-      });
+    const { user } = this.props;
+    this.props.fetchGroups(user.uid);
   }
   render() {
-    const { groups, loading } = this.state;
+    const { groups, loading } = this.props.groups;
     if (loading) {
-      return <ActivityIndicator />;
+      return <ActivityIndicator size="large" />;
     } else if (!loading && !groups.length) {
-      return <Text>No Groups</Text>;
+      return <NoGroups />;
     }
     return (
       <ScrollView>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Your Groups:</Text>
+        </View>
         <View style={styles.container}>
           {groups.map((group, index) => (
             <View key={index} style={styles.view}>
@@ -64,6 +49,20 @@ export default class MyGroups extends Component {
   }
 }
 
+const mapState = state => ({
+  groups: state.groups,
+  user: state.auth.user,
+});
+
+const mapDispatch = dispatch => ({
+  fetchGroups: userId => dispatch(fetchGroups(userId)),
+});
+export default connect(
+  mapState,
+  mapDispatch
+)(MyGroups);
+
+// STYLES
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -72,7 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   groupContainer: {
-    backgroundColor: '#ffaf40',
+    backgroundColor: '#4834d4',
     padding: 20,
     borderRadius: 20,
   },
@@ -83,6 +82,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   view: {
+    padding: 15,
+  },
+  title: {
+    fontSize: 26,
+    textAlign: 'center',
     padding: 20,
+    fontWeight: 'bold',
   },
 });

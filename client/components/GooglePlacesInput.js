@@ -5,14 +5,15 @@ import AddPlace from './AddPlace';
 import { withNavigation } from 'react-navigation';
 
 const GooglePlacesInput = props => {
-  const { groupName } = props;
+  const { groupName, members } = props;
+  console.log(members);
   return (
     <GooglePlacesAutocomplete
       placeholder="Add a new place"
       minLength={2} // minimum length of text to search
       autoFocus={false}
       returnKeyType="search"
-      listViewDisplayed="auto" // true/false/undefined
+      listViewDisplayed="auto"
       fetchDetails={true}
       renderDescription={row => row.description}
       onPress={(data, details = null) => {
@@ -23,6 +24,7 @@ const GooglePlacesInput = props => {
         const website = details.website;
         const phone = details.formatted_phone_number;
         return props.navigation.navigate('AddPlace', {
+          members,
           groupName,
           name,
           address,
@@ -58,10 +60,6 @@ const GooglePlacesInput = props => {
         fields: ['name', 'formatted_address'],
       }}
       debounce={200}
-      // renderLeftButton={() => (
-      //   <Image source={require('path/custom/left-icon')} />
-      // )}
-      // renderRightButton={() => <Text>Custom text after the input</Text>}
     />
   );
 };

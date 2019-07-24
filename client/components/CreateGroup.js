@@ -6,49 +6,29 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import firebase from 'firebase';
+import { connect } from 'react-redux';
+import { createGroup, addAllMembers } from '../store/reducers/group';
 
-export default class CreateGroup extends Component {
+class CreateGroup extends Component {
   constructor(props) {
     super(props);
+    const { user } = this.props;
     this.state = {
       groupName: '',
       userEmail: '',
-      friends: [],
+      friends: [user.email],
     };
     this.addUser = this.addUser.bind(this);
-    this.createGroup = this.createGroup.bind(this);
+    this.create = this.create.bind(this);
   }
-  addUser(groupName) {
-    firebase
-      .firestore()
-      .collection('users')
-      .doc(this.state.userEmail)
-      .collection('groups')
-      .doc()
-      .set({ groupName });
+  addUser() {
     this.state.friends.push(this.state.userEmail);
     this.setState({ userEmail: '' });
   }
-  createGroup(groupName, friends) {
-    const user = firebase.auth().currentUser;
-    firebase
-      .firestore()
-      .collection('users')
-      .doc(user.email)
-      .collection('groups')
-      .doc()
-      .set({ groupName });
-    friends.map(friend =>
-      firebase
-        .firestore()
-        .collection('users')
-        .doc(friend)
-        .collection('groups')
-        .doc()
-        .set({ groupName })
-    );
-    this.props.navigation.navigate('MyGroups');
+  create(groupName) {
+    const { createGroup, navigation } = this.props;
+    createGroup(groupName, this.state.friends);
+    navigation.navigate('MyGroups');
   }
   render() {
     return (
@@ -67,34 +47,48 @@ export default class CreateGroup extends Component {
             value={this.state.userEmail}
           />
         </View>
-        {this.state.friends
-          ? this.state.friends.map((friend, index) => (
-              <Text key={index}>{friend}</Text>
-            ))
-          : null}
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text
-            onPress={() => this.addUser(this.state.groupName)}
-            style={styles.buttonText}
-          >
+        <TouchableOpacity style={styles.addButton}>
+          <Text onPress={() => this.addUser()} style={styles.buttonText}>
             add friend
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text
-            onPress={() =>
-              this.createGroup(this.state.groupName, this.state.friends)
-            }
-            style={styles.buttonText}
-          >
-            CREATE GROUP
-          </Text>
+        <Text style={styles.text}>Friends currently in group:</Text>
+        {this.state.friends
+          ? this.state.friends.map((friend, index) => (
+              <Text style={styles.subText} key={index}>
+                {friend}
+              </Text>
+            ))
+          : null}
+
+        <TouchableOpacity
+          style={styles.buttonContainer}
+          onPress={() => this.create(this.state.groupName)}
+        >
+          <Text style={styles.buttonText}>CREATE GROUP</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
 
+const mapState = state => ({
+  user: state.auth.user,
+});
+
+const mapDispatch = dispatch => ({
+  createGroup: (groupName, userEmail) =>
+    dispatch(createGroup(groupName, userEmail)),
+  addAllMembers: (members, groupName) =>
+    dispatch(addAllMembers(members, groupName)),
+});
+
+export default connect(
+  mapState,
+  mapDispatch
+)(CreateGroup);
+
+// STYLES
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
@@ -104,7 +98,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   buttonContainer: {
-    backgroundColor: '#ff9f1a',
+    backgroundColor: '#eb4d4b',
     padding: 20,
     borderRadius: 20,
     marginTop: 20,
@@ -113,5 +107,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#FFFFFF',
     fontSize: 20,
+  },
+  addButton: {
+    width: 140,
+    backgroundColor: '#eb4d4b',
+    marginBottom: 20,
+    marginTop: 20,
+    padding: 5,
+    borderRadius: 20,
+  },
+  text: {
+    fontSize: 20,
+    paddingBottom: 20,
+  },
+  subText: {
+    paddingBottom: 10,
   },
 });

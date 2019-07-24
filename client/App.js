@@ -9,31 +9,41 @@ import MyGroups from './components/MyGroups';
 import AddPlace from './components/AddPlace';
 import Group from './components/Group';
 import Search from './components/Search';
+import AddFriends from './components/AddFriends';
 import PlaceDetails from './components/PlaceDetails';
+import AppContainer from './components/TabNavigator';
 import '../config/firebaseConfig';
 
-const AppNavigator = createStackNavigator(
-  {
-    Home: Home,
-    Signup: Signup,
-    Login: Login,
-    Welcome: Welcome,
-    CreateGroup: CreateGroup,
-    MyGroups: MyGroups,
-    AddPlace: AddPlace,
-    Group: Group,
-    Search: Search,
-    PlaceDetails: PlaceDetails,
-  },
-  {
-    initialRouteName: 'Home',
-  }
-);
+import store from './store';
+import { Provider } from 'react-redux';
 
-const AppContainer = createAppContainer(AppNavigator);
+// const AppNavigator = createStackNavigator(
+//   {
+//     Home: Home,
+//     Signup: Signup,
+//     Login: Login,
+//     Welcome: Welcome,
+//     AddFriends: AddFriends,
+//     CreateGroup: CreateGroup,
+//     MyGroups: MyGroups,
+//     AddPlace: AddPlace,
+//     Group: Group,
+//     Search: Search,
+//     PlaceDetails: PlaceDetails,
+//   },
+//   {
+//     initialRouteName: 'Home',
+//   }
+// );
+
+// const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.Component {
   render() {
-    return <AppContainer />;
+    return (
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    );
   }
 }

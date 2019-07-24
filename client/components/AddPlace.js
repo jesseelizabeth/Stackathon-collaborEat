@@ -6,28 +6,25 @@ import {
   TextInput,
   TouchableOpacity,
   Picker,
+  ScrollView,
+  Alert,
 } from 'react-native';
-import firebase from 'firebase';
+import { connect } from 'react-redux';
+import { addNewPlace } from '../store/reducers/place';
 
-export default class AddPlace extends Component {
+class AddPlace extends Component {
   constructor(props) {
     super(props);
     const { navigation } = this.props;
-    const groupName = navigation.getParam('groupName');
-    const name = navigation.getParam('name');
-    const address = navigation.getParam('address');
-    const priceLevel = navigation.getParam('priceLevel');
-    const starRating = navigation.getParam('starRating');
-    const website = navigation.getParam('website');
-    const phone = navigation.getParam('phone');
     this.state = {
-      groupName,
-      name,
-      address,
-      priceLevel,
-      starRating,
-      website,
-      phone,
+      members: navigation.getParam('members'),
+      groupName: navigation.getParam('groupName'),
+      name: navigation.getParam('name'),
+      address: navigation.getParam('address'),
+      priceLevel: navigation.getParam('priceLevel'),
+      starRating: navigation.getParam('starRating'),
+      website: navigation.getParam('website'),
+      phone: navigation.getParam('phone'),
       description: '',
       tags: [],
       tag: '',
@@ -35,30 +32,44 @@ export default class AddPlace extends Component {
     this.addPlace = this.addPlace.bind(this);
     this.addTag = this.addTag.bind(this);
   }
-  addPlace(name, address, priceLevel, starRating, website, phone) {
-    const user = firebase.auth().currentUser;
-    const placeRef = firebase
-      .firestore()
-      .collection('users')
-      .doc(user.email)
-      .collection('groups')
-      .doc(this.state.groupName) // target specific group
-      .collection('places')
-      .doc();
-    placeRef.set({
+  addPlace() {
+    let {
+      members,
+      groupName,
       name,
       address,
       priceLevel,
       starRating,
       website,
       phone,
-      description: this.state.description,
-      tags: this.state.tags,
+      description,
+      tags,
+    } = this.state;
+
+    if (priceLevel === undefined) {
+      priceLevel = ' ';
+    }
+    this.props.addNewPlace(groupName, members, {
+      name,
+      address,
+      priceLevel,
+      starRating,
+      website,
+      phone,
+      description,
+      tags,
     });
     return this.props.navigation.navigate('MyGroups');
   }
   addTag() {
-    this.state.tags.push(this.state.tag);
+    const { tags, tag } = this.state;
+    if (tags.includes(tag)) {
+      Alert.alert('', 'You already added this tag!', [{ text: 'OK' }], {
+        cancelable: false,
+      });
+    } else {
+      tags.push(tag);
+    }
     this.setState({ tag: '' });
   }
   render() {
@@ -71,52 +82,56 @@ export default class AddPlace extends Component {
       phone,
     } = this.state;
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>{name}</Text>
-        <Text style={styles.text}>{address}</Text>
-        <Text style={styles.text}>Price Level: {priceLevel}</Text>
-        <Text style={styles.text}>Star Rating: {starRating}</Text>
-        <Text style={styles.text}>{website}</Text>
-        <Text style={styles.text}>{phone}</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Description"
-          onChangeText={description => this.setState({ description })}
-          value={this.state.description}
-        />
-        {this.state.tags.length
-          ? this.state.tags.map(tag => <Text key={tag}>{tag}</Text>)
-          : null}
-        <Picker
-          selectedValue={this.state.tag}
-          onValueChange={(itemValue, itemIndex) =>
-            this.setState({ tag: itemValue })
-          }
-        >
-          <Picker.Item label="Add some tags" value="add some tags" />
-          <Picker.Item label="Dates" value="Dates" />
-          <Picker.Item label="Ambiance" value="Ambiance" />
-          <Picker.Item label="Groups" value="Groups" />
-        </Picker>
-        <Text onPress={this.addTag}>Add Tag</Text>
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text
-            style={styles.buttonText}
-            onPress={() =>
-              this.addPlace(
-                name,
-                address,
-                priceLevel,
-                starRating,
-                website,
-                phone
-              )
+      <ScrollView>
+        <View style={styles.container}>
+          <Text style={styles.text}>{name}</Text>
+          <Text style={styles.text}>{address}</Text>
+          <Text style={styles.text}>Price Level: {priceLevel}</Text>
+          <Text style={styles.text}>Star Rating: {starRating}</Text>
+          <Text style={styles.text}>{website}</Text>
+          <Text style={styles.text}>{phone}</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Description"
+            onChangeText={description => this.setState({ description })}
+            value={this.state.description}
+          />
+          {this.state.tags.length
+            ? this.state.tags.map(tag => (
+                <Text style={styles.text} key={tag}>
+                  {tag}
+                </Text>
+              ))
+            : null}
+          <Picker
+            selectedValue={this.state.tag}
+            onValueChange={(itemValue, itemIndex) =>
+              this.setState({ tag: itemValue })
             }
           >
-            ADD
-          </Text>
-        </TouchableOpacity>
-      </View>
+            <Picker.Item label="Add some tags" value="add some tags" />
+            <Picker.Item label="Dates" value="Dates" />
+            <Picker.Item label="Ambiance" value="Ambiance" />
+            <Picker.Item label="Groups" value="Groups" />
+            <Picker.Item label="Food" value="Food" />
+            <Picker.Item label="Drinks" value="Drinks" />
+            <Picker.Item label="Casual" value="Casual" />
+            <Picker.Item label="Fancy" value="Fancy" />
+          </Picker>
+          <View style={styles.center}>
+            <TouchableOpacity style={styles.addTag}>
+              <Text style={styles.addTagText} onPress={this.addTag}>
+                Add Tag
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.buttonContainer}>
+            <Text style={styles.buttonText} onPress={() => this.addPlace()}>
+              ADD
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -131,10 +146,10 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 5,
-    height: 100,
+    height: 40,
   },
   buttonContainer: {
-    backgroundColor: '#ff9f1a',
+    backgroundColor: '#eb4d4b',
     padding: 20,
     borderRadius: 20,
     marginTop: 20,
@@ -144,4 +159,27 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 20,
   },
+  addTag: {
+    backgroundColor: '#4834d4',
+    width: 140,
+    padding: 10,
+    borderRadius: 20,
+  },
+  addTagText: {
+    color: 'white',
+    textAlign: 'center',
+  },
+  center: {
+    alignItems: 'center',
+  },
 });
+
+const mapDispatch = dispatch => ({
+  addNewPlace: (groupName, members, placeInfo) =>
+    dispatch(addNewPlace(groupName, members, placeInfo)),
+});
+
+export default connect(
+  null,
+  mapDispatch
+)(AddPlace);
